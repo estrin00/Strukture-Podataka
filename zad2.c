@@ -24,23 +24,27 @@ int main()
 	head.next = NULL;
 	char option;
 
-	while (1) {
-		printf("Unesi p za unos na pocetak, i za ispis, k za unos na kraj,t za trazenje po prezimenu i b za brisanje elementa:\n");
-		scanf("%c", &option);
+	printf("Unesi p za unos na pocetak, i za ispis, k za unos na kraj,t za trazenje po prezimenu i b za brisanje elementa:\n");
+	scanf("%c", &option);
 
-		if (option == 'p')
-			InsertAtTheBeginning(&head);
-		else if (option == 'i')
-			Print(head.next);
-		else if (option == 'k')
-			InsertAtTheEnd(&head);
-		else if (option == 't')
-			SearchBySurname(head.next);
-		else if (option == 'b')
-			Delete(&head);
-		else
-			printf("Greska!\n");
-	}
+	if (option == 'p')
+		InsertAtTheBeginning(&head);
+	
+	else if (option == 'i')
+		Print(head.next);
+	
+	else if (option == 'k')
+		InsertAtTheEnd(&head);
+	
+	else if (option == 't')
+		SearchBySurname(head.next);
+	
+	else if (option == 'b')
+		Delete(&head);
+	
+	else
+		printf("Greska!\n");
+	
 
 	return 0;
 }
