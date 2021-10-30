@@ -108,7 +108,7 @@ int SearchBySurname(position p)
 	printf("Prezime trazene osobe: ");
 	scanf(" %s", &surn);
 
-	while (p != NULL && strcmp(prez, p->surname) != 0)
+	while (p != NULL && strcmp(surn, p->surname) != 0)
 	{
 		p = p->next;
 	}
