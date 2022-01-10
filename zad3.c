@@ -1,346 +1,369 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-//3.ZADATAK
+struct _Osoba;
+typedef struct _Osoba* pozicija;
 
-typedef struct person* position;
-struct person {
-	char name[30];
-	char surname[30];
-	int year;
-	position next;
+typedef struct _Osoba {
+	char ime[20];
+	char prezime[30];
+	int godinaRodenja;
+	pozicija next;
 
-};
+}Osoba;
 
-int InsertAtTheBeginning(position p);
-int Print(position p);
-int InsertAtTheEnd(position p);
-int SearchBySurname(position p);
-int Delete(position p);
+int unosP(pozicija p);
+int ispis(pozicija p);
+int unosK(pozicija p);
+int pronadiPrezime(pozicija p);
+int brisi(pozicija p);
 
-// FUNKCIJE TRECEG ZADATKA
-
-int AddAfter(position p);
-int AddBefore(position p);
-int SortBySurname(position p);
-void AddListToAFile(position p);
-void ReadListFromAFile(position p);
-
+// 3.zad
+int dodajIza(pozicija p);
+int dodajIspred(pozicija p);
+int sortirajPoPrezimenima(pozicija p);
+void upisiUDat(pozicija p);
+void citajIzDat(pozicija p);
 
 
 int main()
 {
-	struct person head;
+	Osoba head;
 	head.next = NULL;
-	char option;
+	char x;
 
-	printf("Unesi p za unos na pocetak, i za ispis, k za unos na kraj,t za trazenje po prezimenu i b za brisanje elementa; ");
-	printf(" a za dodavanje iza elementa, n za dodavanje ispred elementa, s za sortiranje po prezimenu, d za dodavanje liste datoteci i c za citanje liste iz datoteke:\n");
-	scanf("%c", &option);
+	printf("Odaberi a,b,c,d,e: x= ");
+	scanf("%c", &x);
+	puts("\n");
 
-	if (option == 'p')
-		InsertAtTheBeginning(&head);
+	if (x == 'a')
+	{
+		printf("a) UNOS NA POCETAK LISTE: \n");
+		unosP(&head);
+	}
 
-	else if (option == 'i')
-		Print(head.next);
+	else if (x == 'b')
+	{
+		printf("b) ISPIS LISTE: \n");
+		ispis(head.next);
+	}
 
-	else if (option == 'k')
-		InsertAtTheEnd(&head);
+	else if (x == 'c')
+	{
+		printf("c) UNOS NA KRAJ LISTE: \n");
+		unosK(&head);
+	}
 
-	else if (option == 't')
-		SearchBySurname(head.next);
+	else if (x == 'd')
+	{
+		printf("d) PRONADJI PO PREZIMENU: \n");
+		pronadiPrezime(head.next);
+	}
 
-	else if (option == 'b')
-		Delete(&head);
+	else if (x == 'e')
+	{
+		printf("e) BRISANJE IZ LISTE: \n");
+		brisi(&head);
 
-	// POZIV FUNKCIJA TRECEG ZADATKA
+	}
+	
+	// 3.zadatak 
+	
+	else if (x == 'f')
+	{
+		printf("f) DODAVANJE NOVOG ELEMENTA IZA ODREĐENOG ELEMENTA: \n");
+		dodajIza(&head);
+	}
 
-	else if (option == 'a')
-		AddAfter(&head);
+	else if (x == 'g')
+	{
+		printf("g) DODAVANJE NOVOG ELEMENTA ISPRED ODREĐENOG ELEMENTA: \n");
+		dodajIspred(&head);
+	}
 
-	else if (option == 'n')
-		AddBefore(&head);
+	else if (x == 'h')
+	{
+		printf("h) SORTIRANJE LISTE PO PREZIMENIMA: \n");
+		sortirajPoPrezimenima(&head);
+	}
 
-	else if (option == 's')
-		SortBySurname(head.next);
+	else if (x == 'i')
+	{
+		printf("i) UPIS LISTE U DATOTEKU: \n");
+		upisUDat(&head);
+	}
 
-	else if (option == 'd')
-		AddListToAFile(head.next);
+	else if (x == 'j')
+	{
+		printf("j) CITANJE LISTE IZ DATOTEKE: \n");
+		citajIzDat(&head);
+	}
 
-	else if (option == 'c')
-		ReadListFromAFile(head.next);
 
-	else
-		printf("Greska!\n");
+
+
+	else printf("Krivo slovo je uneseno!\n");
 
 
 	return 0;
 }
 
-int InsertAtTheBeginning(position p)
+
+
+
+
+int unosP(pozicija p)  //a
 {
-	position q = NULL;
-	q = (position)malloc(sizeof(struct person));
+	pozicija q = NULL;
+	q = (pozicija)malloc(sizeof(Osoba));
 
-	if (q == NULL)
-	{
-		printf("Greska, memorija nije alocirana!\n");
-		return 1;
-	}
+	printf("Unesi ime osobe: \n");
+	scanf(" %s", q->ime);
 
-	printf("Ime osobe: ");
-	scanf("%s", q->name);
-	printf("Prezime osobe: ");
-	scanf("%s", q->surname);
-	printf("Godine: ");
-	scanf("%d", &q->year);
+	printf("Unesi prezime osobe: \n");
+	scanf(" %s", q->prezime);
+
+	printf("Unesi godinu ro�enja %s %s: \n", q->ime, q->prezime);
+	scanf("%d", q->godinaRodenja);
 
 	q->next = p->next;
 	p->next = q;
 
 	return 0;
-}
 
-int InsertAtTheEnd(position p)
+}
+int ispis(pozicija p) //b
+{
+	while (p != NULL)
+	{
+		printf("%s %s, %d\n", p->ime, p->prezime, p->godinaRodenja);
+		p = p->next;
+	}
+
+	return 0;
+
+}
+int unosK(pozicija p) //c
 {
 	while (p->next != NULL)
 	{
 		p = p->next;
 	}
 
-	position q = NULL;
-	q = (position)malloc(sizeof(struct person));
+	pozicija q = NULL;
+	q = (pozicija)malloc(sizeof(Osoba));
 
-	if (q == NULL)
-	{
-		printf("Greska, memorija nije alocirana!\n");
-		return 1;
-	}
+	printf("Unesi ime osobe: \n");
+	scanf(" %s", q->ime);
 
-	printf("Ime osobe: ");
-	scanf("%s", q->name);
-	printf("Prezime osobe: ");
-	scanf("%s", q->surname);
-	printf("Godine: ");
-	scanf("%d", &q->year);
+	printf("Unesi prezime osobe: \n");
+	scanf(" %s", q->prezime);
+
+	printf("Unesi godinu ro�enja %s %s: \n", q->ime, q->prezime);
+	scanf("%d", q->godinaRodenja);
+
 
 	q->next = p->next;
 	p->next = q;
 
+
 	return 0;
 }
-
-int SearchBySurname(position p)
+int pronadiPrezime(pozicija p) //d
 {
-	char surn[50];
-	printf("Prezime trazene osobe: ");
-	scanf(" %s", &surn);
+	char zeljenoPrezime[30];
+	printf("Unesi prezime koje zelis pronaci: \n");
+	scanf(" %s", &zeljenoPrezime);
 
-	while (p != NULL && strcmp(surn, p->surname) != 0)
+	while (p != NULL && strcmp(zeljenoPrezime, p->prezime) != 0)
 	{
 		p = p->next;
 	}
 
 	if (p == NULL)
-		printf("Greska,takva osoba ne postoji!\n");
+		printf("Nema osobe s tim prezimenom!\n");
 	else
-		printf("Adresa osobe koju trazis je %d.\n", p);
+		printf("Adresa trazene osobe: %p\n", p);
+
 
 	return 0;
 }
-
-int Delete(position p)
+int brisi(pozicija p) //e
 {
-	position prev = NULL;
-	char surn[50];
-
-	printf("Unesi prezime osobe koju zelisi izbrisati s liste: ");
-	scanf(" %s", &surn);
-
-	while (p->next != NULL && strcmp(surn, p->surname) != 0)
+	pozicija prethodni = NULL;
+	char zeljenoPrezime[30];
+	printf("Unesi prezime osobe koju zelis izbrisati:\n");
+	scanf(" %s", zeljenoPrezime);
+	while (p->next != NULL && strcmp(zeljenoPrezime, p->prezime) != 0)
 	{
-		prev = p;
+		prethodni = p;
 		p = p->next;
 	}
-
-	if (prev != NULL && strcmp(surn, p->surname) == 0)
+	if (prethodni != NULL && strcmp(zeljenoPrezime, p->prezime) == 0)
 	{
-		p = prev->next;
-		prev->next = p->next;
-		free(p);
+		p = prethodni->next;
+		prethodni->next = p->next;
 	}
 
 	return 0;
 }
 
-int AddAfter(position p)
+int dodajIza(pozicija p) //f, zad3 a)
 {
+	pozicija noviEl = NULL;
+	noviEl = (pozicija)malloc(sizeof(Osoba));
 
-	char surname2[50];
+	p = p->next;
 
-	position q=NULL;
-	q = (position)malloc(sizeof(struct person));
+	char zeljenoPrezime[30];
+	printf("Unesi prezime iza kojeg zelis dodati novi element: \n");
+	scanf(" %s", zeljenoPrezime);
 
-	if (q == NULL)
-	{
-		printf("Greska, memorija nije alocirana!\n");
-		return 1;
-	}
-	
-	printf("\nUPIS NOVE OSOBE\n");
-	// q je nova osoba u listi
+	printf("Unesi ime (nove) osobe: \n");
+	scanf(" %s", noviEl->ime);
+	printf("Unesi prezime (nove) osobe: \n");
+	scanf(" %s", noviEl->prezime);
+	printf("Godina rođenja %s %s: \n", noviEl->ime, noviEl->prezime);
+	scanf("%d", noviEl->godinaRodenja);
 
-	printf("Ime osobe: ");
-	scanf(" %s", q->name);
-
-	printf("Prezime osobe: ");
-	scanf(" %s", q->surname);
-
-	printf("Godine: ");
-	scanf("%d", &q->year);
-
-	printf("Prezime osobe iza koje dodajes novu osobu:\n");
-	scanf(" %s", &surname2);
-
-	while (p->next != NULL && p->next->surname!=surname2);
+	while (p != NULL && p->prezime != zeljenoPrezime)
 	{
 		p = p->next;
 	}
 
-	if(p->next!=NULL)
+	if (p != NULL)
 	{
-		q->next = p->next;
-		p->next = q;
+		noviEl->next = p->next;
+		p->next = noviEl;
 	}
+
+	else printf("Greska!\n");
 	
-
-
 	return 0;
+
 }
 
-int AddBefore(position p)
+int dodajIspred(pozicija p) //g, zad3 b)
 {
+	pozicija noviEl=NULL;
+	noviEl= (pozicija)malloc(sizeof(Osoba));
 
-	char surname2[50];
-	
-	position q;
-	position prev;
+	char zeljenoPrezime[30];
+	printf("Unesi prezime iza kojeg zelis dodati novi element: \n");
+	scanf(" %s", zeljenoPrezime);
 
-	q = (position)malloc(sizeof(struct person));
+	printf("Unesi ime (nove) osobe: \n");
+	scanf(" %s", noviEl->ime);
+	printf("Unesi prezime (nove) osobe: \n");
+	scanf(" %s", noviEl->prezime);
+	printf("Godina rođenja %s %s: \n", noviEl->ime, noviEl->prezime);
+	scanf("%d", noviEl->godinaRodenja);
 
-	if (q == NULL)
-	{
-		printf("Greska, memorija nije alocirana!\n");
-		return 1;
-	}
-
-	printf("Ime osobe: ");
-	scanf(" %s", q->name);
-
-	printf("Prezime osobe: ");
-	scanf(" %s", q->name);
-
-	printf("Godine: ");
-	scanf("%d", &q->year);
-
-	printf("Prezime osobe ispred koje dodajes drugu osobu:\n");
-	scanf(" %s", &surname2);
-
-	prev = p;
-	while (p->next != NULL &&  p->next->surname != surname2)
+	while (p->next != NULL && p->next->prezime != zeljenoPrezime)
 	{
 		p = p->next;
 	}
 
 	if (p->next != NULL)
 	{
-		q->next = p->next;
-		p->next = q;
+		noviEl->next = p->next;
+		p->next = noviEl;
 	}
+
+	else printf("Greska!\n");
 
 	return 0;
 }
-int SortBySurname(position p)
-{
-	char surname2[50];
-	printf("Unesi prezime osobe koju trazis:\n");
-	scanf(" %s", &surname2);
 
-	if (surname2 == NULL)
+int sortirajPoPrezimenima(pozicija p)  //h, 3c)
+{
+	pozicija i = p;
+	pozicija j = NULL;
+	pozicija preth_j = NULL;
+	pozicija kraj = NULL;
+
+	while (i->next != kraj)
+	{
+		preth_j = i;
+		j = preth_j->next;
+		while (j->next != kraj)
+		{
+			if (strcmp(j->prezime, j->next->prezime) > 0)
+			{
+				preth_j->next = j->next;
+				j->next = j->next->next;
+				preth_j->next->next = j;
+				j = preth_j->next;
+			}
+			preth_j = j;
+			j = j->next;
+		}
+	}
+	kraj = j;
+	
+
+	return 0;
+}
+
+void upisUDat(pozicija p) //i, zad3 d)
+{
+		FILE* dat = NULL;
+		dat = fopen("ListaOsobe", "w");
+
+		if (dat == NULL)
+		{
+			printf("Greska!\n");
+			return 1;
+		}
+		while (p != NULL)
+		{
+			fprintf(dat, "%s %s %d \n", p->ime, p->prezime, p->godinaRodenja);
+			p = p->next;
+		}
+		fclose(dat);
+
+}
+
+void citajIzDat(pozicija p) //j, zad3 e)
+{
+	char imeDat[50];
+	
+	printf("Unesi ime datoteke iz koje zelis citati listu: \n");
+	scanf(" %s", &imeDat);
+
+	int brojac = 0;
+	int i = 0;
+	pozicija q = NULL;
+
+	FILE* dat = NULL;
+	dat = fopen(imeDat, "r");
+	
+	if (dat == NULL)
 	{
 		printf("Greska!\n");
 		return 1;
 	}
 
-	while (p != NULL && p->surname != surname2)
-	{
-		p = p->next;
-	}
-	
-	return 0;
-}
-
-
-
-
-
-void AddListToAFile(position p)
-{
-	FILE* dat = NULL;
-	dat = fopen("ListaImena.txt", "w");
-
-	if (dat == NULL)
-	{
-		printf("Greska, ne moze otvoriti datoteku!\n");
-		return 1;
-	}
-	
-	while (p != NULL)
-	{
-		fprintf(dat, "%s    %s    %d\n", p->name, p->surname, p->year);
-		p = p->next;
-	}
-
-	fclose(dat);
-}
-
-void ReadListFromAFile(position p)
-{
-	position q = NULL;
-	char* fName = NULL;
-	FILE* dat = NULL;
-
-	printf("Unesi ime datoteke: ");
-	scanf(" %s", &fName);
-
-	dat = fopen(fName, "w");
-	if (dat == NULL)
-	{
-		printf("Greska,ne moze otvoriti datoteku!\n");
-		return 1;
-	}
-
-	int i = 0, j = 0;
-
 	while (!feof(dat))
 	{
 		if (fgetc(dat) == '\n')
 		{
-			j++;
+			brojac++;
 		}
 	}
-
-	if (j > 0)
+	if(brojac!=0)
 	{
-		for (i = 0; i < j; i++)
+		for (i = 0; i < brojac; i++)
 		{
-			q = (position)malloc(sizeof(person));
-			fscanf(dat, "%s %s %d", q->name, q->surname, q->year);
+			q = (pozicija)malloc(sizeof(Osoba));
+			fscanf(dat, "%s %s %d", q->ime, q->prezime, &q->godinaRodenja);
 			q->next = p->next;
 			p->next = q;
+		
 		}
 	}
-
 	fclose(dat);
+
 }
