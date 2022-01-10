@@ -1,210 +1,195 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
-struct _stablo;
-typedef struct _stablo* pozicija;
-typedef struct _stablo
+typedef struct _Stablo* position;
+typedef struct _Stablo
 {
 	int el;
-	pozicija desno;
-	pozicija lijevo;
-}stablo;
+	position left;
+	position right;
+}Stablo;
 
-pozicija unos(pozicija, int);
-void print(pozicija);
-pozicija Min(pozicija);
-pozicija Max(pozicija);
-pozicija izbrisi(pozicija, int);
-pozicija pronadji(pozicija);
+position unosNovogEl(int, position);
+void inorder(position);
+void preorder(position);
+void postorder(position);
+position brisi(position);
+position trazi(int, position);
+position pronadiMin(position);
 
-int main()
+
+
+int  main()
 {
+	position root = NULL;
+	position p = NULL;
+	int noviEl;
+	int brisiEl;
+	int elem;
+	int odabir;
 
-	pozicija root = NULL;
-	pozicija trazeni = NULL;
+	printf("Odaberi broj: \n");
+	printf("1 - unos novog elementa u stablo \n");
+	printf("2 - ispis elemenata ~ inorder \n");
+	printf("3 - ispis elemenata ~ preorder \n");
+	printf("4 - ispis elemenata ~ postorder \n");
+	printf("5 - brisanje nekog elementa\n");
+	printf("6 - trazenje nekog elementa \n");
 
-	char zeljenaOpcija = '0';
-	int x = 0;
+	scanf("%d", &odabir);
 
-	while (zeljenaOpcija != 'i')
+	if (odabir == 1)
 	{
-		printf("Odabir funkcije:\n");
-		printf("1 - unos\n");
-		printf("2 - print\n");
-		printf("3 - izbrisi\n");
-		printf("4 - pronadji\n");
-
-		printf("Zeljena funkcija: ");
-		scanf(" %c",&zeljenaOpcija);
-
-		switch (zeljenaOpcija)
-		{
-		case '1':
-		{
-			printf("Broj za unos:\n");
-			scanf(" %d", &x);
-			root = unos(root, x);
-			break;
-		}
-
-		case'2':
-		{
-			if (root == NULL)
-				printf("Stablo je prazno!\n");
-			else
-				print(root);
-			break;
-		}
-
-		case'3':
-		{
-			printf("Broj koji se brise:\n");
-			scanf(" %d", &x);
-			root = izbrisi(root, x);
-			break;
-		}
-
-		case'4':
-		{
-			printf("Broji koji se trazi:\n");
-			scanf(" %d", &x);
-			trazeni = pronadji(root, x);
-			if (trazeni != NULL)
-				printf("Trazeni element %d se nalazi na adresi %x.\n", trazeni->el, trazeni);
-			else
-				printf("Trazeni broj %d se ne moze pronaci!\n",x);
-			break;
-		}
-
-		case'i':
-		{
-			printf("Izlaz!\n");
-			break;
-		}
-
-		default:
-		{
-			printf("Pogresna opcija!\n");
-		}
-
-		}
-
+		printf("Unesi element koji zelis unijeti:  \n");
+		scanf("%d", &noviEl);
+		root=unosNovogEl(noviEl, root);
 	}
+
+	else if (odabir == 2)
+	{
+		inorder(root);
+	}
+
+	else if (odabir == 3)
+	{
+		preorder(root);
+	}
+
+	else if (odabir == 4)
+	{
+		postorder(root);
+	}
+
+	else if (odabir == 5)
+	{
+		printf("Koji element zelis izbrisati? \n");
+		scanf("%d", &brisiEl);
+		root = (brisiEl, root);
+	}
+
+	else if (odabir == 6)
+	{
+		printf("Koji element zelis pronaci? \n");
+		scanf("%d", &elem);
+		p = trazi(elem, root);
+	}
+
+	else printf("Pogresan odabir!\n");
 
 	return 0;
-
 }
-pozicija unos(pozicija p, int x)
+
+position unosNovogEl(int broj, position p)
 {
 	if (p == NULL)
 	{
-		p = (pozicija)malloc(sizeof(stablo));
-		if (p)
-		{
-			p->el = x;
-			p->lijevo = NULL;
-			p->desno = NULL;
-		}
-		else if (p->el < x)
-			p->desno = unos(p->desno, x);
-		else if (p->el > x)
-			p->lijevo = unos(p->lijevo, x);
-		else
-			printf("x vec postoji u stablu!\n");
+		p = (position)malloc(sizeof(Stablo));
+		p->el = broj;
+		p->left = NULL;
+		p->right = NULL;
 
-		return p;
 	}
-}
 
-void print(pozicija p)
-{
-	if (p != NULL)
+	else if (broj < p->el)
 	{
-		print(p->lijevo);
-		printf(" %d", p->el);
-		print(p->desno);
+		p->left = unosNovogEl(broj, p->left);
 	}
-}
 
-pozicija Min(pozicija p)
-{
-	if (p == NULL)
-		return p;
-
-	else if (p->lijevo == NULL)
-		return p;
-
-	else
-		return Min(p->lijevo);
-}
-
-pozicija Max(pozicija p)
-{
-
-	if (p != NULL)
+	else if (broj > p->el)
 	{
-		while (p->desno != NULL)
-			p = p->desno;
+		p->right = unosNovogEl(broj, p->right);
 	}
 
 	return p;
 }
 
-pozicija pronadji(pozicija p, int x)
+void inorder(position p)
+{
+	if (p != NULL)
+	{
+		inorder(p->left);
+		printf("%d -> ", p->el);
+		inorder(p->right);
+	}
+}
+
+void preorder(position p)
+{
+	if (p != NULL)
+	{
+		printf("%d", p->el);
+		preorder(p->left);
+		preorder(p->right);
+	}
+}
+
+void postorder(position p)
+{
+	if (p != NULL)
+	{
+		postorder(p->left);
+		postorder(p->right);
+		printf("%d", p->el);
+	}
+}
+
+position trazi(int n, position p)
 {
 	if (p == NULL)
 		return NULL;
-
-	else
-		if (p->el > x)
-			return pronadji(p->lijevo, x);
-
-		else if (p->el < x)
-			return pronadji(p->desno, x);
-
-		else
-			return p;
-
-}
-
-pozicija izbrisi(pozicija p, int x)
-{
-	
-	pozicija temp;
-
-	if (p == NULL)
-		printf("x nije pronadjen!\n");
-
-	else if (p->el > x)
-		p->lijevo = izbrisi(p->lijevo, x);
-
-	else if (p->el < x)
-		p->desno = izbrisi(p->desno, x);
-
 	else
 	{
-		if (p->lijevo != NULL && p->desno != NULL)
+		if (p->el > n)
+			return trazi(p->left, n);
+		else if (p->el < n)
+			return trazi(p->right, n);
+		else
+			return p;
+	}
+}
+
+position pronadiMin(position p)
+{
+	if (p == NULL)
+		return p;
+	else if (p->left == NULL)
+		return p;
+	else
+		return pronadiMin(p->left);
+}
+
+position brisi(int n, position p)
+{
+	position temp;
+	if (p == NULL)
+		printf("Nema takvog elementa!\n");
+
+	else if (p->el > n)
+		p->left = brisi(n, p->left);
+	else if (p->el < n)
+		p->right = brisi(n, p->right);
+	else
+	{
+		if (p->left != NULL && p->right != NULL)
 		{
-			temp = Min(p->desno);
+			temp = pronadiMin(p->right);
 			p->el = temp->el;
-			p->desno = izbrisi(p->desno, temp->el);
-			p->el = temp->el;
-			p->lijevo = izbrisi(p->lijevo, p->el);
+			p->right = brisi(temp->el, p->right);
 		}
-		
 		else
 		{
 			temp = p;
-			if (p->lijevo == NULL)
-				p = p->desno;
+			if (p->left == NULL)
+				p = p->right;
 			else
-				p = p->lijevo;
+				p = p->left;
 			free(temp);
+				
 		}
-
 	}
 
 	return p;
+
 }
