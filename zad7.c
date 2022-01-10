@@ -52,7 +52,7 @@ int main()
 		printf("2 = print directory\n");
 		printf("3 = cd\n");
 		printf("4 = povratak u prethodni direktorij\n");
-		printf("i = izlaz\n");
+		
 		printf("Zeljeni direktorij: ");
 		scanf(" %c", &zeljeniDirektorij);
 	}
