@@ -80,7 +80,7 @@ int main()
 		
 	case '4':
 	{
-		printf("Izlaz\n");
+		cdt(stack);
 		break;
 	}
 	default:
@@ -280,4 +280,20 @@ int push(position current, pozicija stack)
 	stack->next = q;
 
 	return 0;
+}
+
+position cdt(pozicija s)
+{
+	pozicija pom=NULL;
+	position q=NULL;
+	
+	q=stvori1(1);
+	
+	pom=s->next;
+	q=pom->el;
+	s->next=pom->next;
+	
+	free(pom);
+	
+	return q;
 }
